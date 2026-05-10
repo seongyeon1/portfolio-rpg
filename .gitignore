@@ -1,0 +1,14 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local server logs
+*.log
+
+# Private overrides — if anyone clones and adds full data locally, don't commit.
+game/data/*.private.js
+assets/p-*/
+assets/it-001/
+assets/it-002/

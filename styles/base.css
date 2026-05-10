@@ -1,0 +1,44 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100vh; height: 100dvh;
+  overflow: hidden;
+  background: #2a1f3d;
+}
+body {
+  font-family: 'Pretendard Variable', system-ui, sans-serif;
+  color: #2a1f3d;
+}
+canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+.pixel-en { font-family: 'Press Start 2P', monospace; letter-spacing: 0.04em; }
+.pixel-ko { font-family: 'Galmuri11', sans-serif; letter-spacing: 0.02em; }
+.body-ko  { font-family: 'Pretendard Variable', system-ui, sans-serif; line-height: 1.7; }
+.mono     { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+
+canvas#game {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  display: block;
+  background: #fbe1ec;
+}
+
+#errBox {
+  position: fixed;
+  top: 12px; right: 12px;
+  max-width: 420px;
+  z-index: 9999;
+  padding: 10px 14px;
+  background: #fff0f0;
+  border: 3px solid #c8264f;
+  box-shadow: 4px 4px 0 #2a1f3d;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #2a1f3d;
+  white-space: pre-wrap;
+  display: none;
+}
+#errBox.show { display: block; }
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seongyeon Kim — Kirby's Quest Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles/base.css?v=8">
+  <link rel="stylesheet" href="styles/title.css?v=8">
+  <link rel="stylesheet" href="styles/hud.css?v=8">
+  <link rel="stylesheet" href="styles/modal.css?v=8">
+  <link rel="stylesheet" href="styles/status.css?v=8">
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="errBox"></div>
+
+  <!-- Title screen -->
+  <div class="title-overlay" id="titleOverlay">
+    <span class="title-cloud title-cloud-1"></span>
+    <span class="title-cloud title-cloud-2"></span>
+    <span class="title-cloud title-cloud-3"></span>
+    <p class="title-tagline pixel-ko">★  COLLECT  6  CAREER  STARS  ★</p>
+    <h1 class="title-name pixel-en">Seongyeon Kim</h1>
+    <p class="title-sub pixel-ko">김성연 · AI Engineer @ BrainCrew</p>
+    <button class="start-btn pixel-en" id="startBtn">PRESS START</button>
+    <div class="title-controls pixel-ko">
+      <span class="key">←</span><span class="key">↑</span><span class="key">↓</span><span class="key">→</span> 이동
+      &nbsp;|&nbsp;
+      <span class="key">SPACE</span> 별 받기 / 다음
+      &nbsp;|&nbsp;
+      <span class="key">E</span> 프로젝트 상세
+      &nbsp;|&nbsp;
+      <span class="key">TAB</span> STATUS
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud" id="hud">
+    <div class="row">
+      <span class="label">CTRL</span>
+      <span><span class="key">←↑↓→</span> WALK</span>
+      <span><span class="key">SPACE</span> TALK</span>
+      <span><span class="key">E</span> DETAIL</span>
+    </div>
+    <div class="quests">★ <span id="questCounter">0</span>/6 STARS</div>
+  </div>
+
+  <!-- Floating ABOUT ME button -->
+  <button class="about-me-btn" id="aboutMeBtn" title="자기소개·자격증·수상 보기 (TAB)">
+    <span class="about-badge">!</span>
+    <span class="about-text">
+      <span class="about-en">ABOUT ME</span>
+      <span class="about-ko">자기소개</span>
+    </span>
+    <span class="about-key">TAB</span>
+  </button>
+
+  <!-- One-time tip — appears 5s after game start, hides on first open -->
+  <div class="status-tip" id="statusTip">
+    <span class="tip-star">★</span>
+    여기 누르면<br>
+    <b>자기소개·자격증·수상</b>이<br>
+    한눈에 보여요!
+  </div>
+
+  <!-- Interaction prompt -->
+  <div class="prompt" id="prompt">
+    <span class="key">SPACE</span><span id="promptText">★ 별 받기</span>
+  </div>
+
+  <!-- Dialog box -->
+  <div class="dialog" id="dialog">
+    <div class="dialog-head">
+      <div class="dialog-speaker pixel-en" id="dlgSpeaker"></div>
+      <div class="dialog-period mono" id="dlgPeriod"></div>
+    </div>
+    <div class="dialog-text" id="dlgText"></div>
+    <div class="dialog-foot">
+      <div class="dialog-progress" id="dlgProgress"></div>
+      <div class="dialog-detail-hint" id="dlgDetailHint" style="display:none">[E] DETAIL</div>
+      <div class="dialog-next">▼ SPACE</div>
+    </div>
+  </div>
+
+  <!-- Project detail modal -->
+  <div class="project-modal" id="projectModal">
+    <div class="modal-frame">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+
+      <!-- Grid landing header -->
+      <div class="modal-grid-header" id="modalGridHeader">
+        <h2 class="grid-title pixel-en" id="gridTitle"></h2>
+        <p class="grid-subtitle pixel-ko" id="gridSubtitle">카드를 클릭하면 상세 정보를 볼 수 있어요. ESC로 닫기.</p>
+      </div>
+
+      <!-- Detail header: back · tabs · pager -->
+      <div class="modal-detail-header" id="modalDetailHeader" style="display:none">
+        <button class="back-to-grid" id="backToGrid" title="목록으로 (Backspace)">← LIST</button>
+        <div class="modal-tabs" id="modalTabs"></div>
+        <div class="modal-pager">
+          <button id="modalPrev" title="이전 (←)">‹</button>
+          <span id="modalCounter"></span>
+          <button id="modalNext" title="다음 (→)">›</button>
+        </div>
+      </div>
+
+      <article class="modal-content" id="modalContent"></article>
+    </div>
+  </div>
+
+  <!-- Image lightbox -->
+  <div class="lightbox" id="lightbox">
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <!-- Status panel (RPG character sheet) -->
+  <div class="status-panel" id="statusPanel">
+    <div class="status-frame">
+      <button class="status-close" id="statusClose" aria-label="Close">✕</button>
+      <div class="status-banner" id="statusBanner"></div>
+      <div class="status-tabs" id="statusTabs"></div>
+      <div class="status-content" id="statusContent"></div>
+    </div>
+  </div>
+
+  <!-- Ending screen -->
+  <div class="ending" id="ending">
+    <h2 class="pixel-en">★ ALL QUESTS CLEARED ★</h2>
+    <p class="pixel-ko">6개 스테이지 + 12개 프로젝트 코드를 모두 수집했습니다.<br/>새로운 도전이 있다면 언제든 연락주세요.</p>
+    <div class="links">
+      <a href="mailto:ksy974498@gmail.com">EMAIL</a>
+      <a href="tel:+821023986822">PHONE</a>
+      <a href="https://github.com/seongyeon1" target="_blank" rel="noopener noreferrer">GITHUB</a>
+      <a href="https://www.linkedin.com/in/seongyeon1/" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+    </div>
+    <button class="replay" id="replayBtn">REPLAY</button>
+  </div>
+
+  <script src="https://unpkg.com/kaboom@3000.1.17/dist/kaboom.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    // Initialize mermaid in manual mode — modal renders nodes on demand.
+    if (window.mermaid) {
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: 'neutral',
+        fontFamily: 'JetBrains Mono, monospace',
+        flowchart: { htmlLabels: true, curve: 'basis' },
+      });
+    }
+  </script>
+  <script type="module" src="game/main.js?v=8"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+.title-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; padding: 24px;
+  background: linear-gradient(160deg, #fbe1ec 0%, #ffd1dc 55%, #b8e0b6 100%);
+  text-align: center;
+}
+.title-overlay.hide { display: none; }
+.title-overlay::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0 1px, rgba(0,0,0,0.04) 1px 2px);
+  mix-blend-mode: multiply;
+}
+.title-tagline { font-size: clamp(0.6rem, 1.6vw, 0.875rem); color: #6b5e85; }
+.title-name {
+  font-family: 'Galmuri14', 'Galmuri11', sans-serif;
+  font-size: clamp(1.7rem, 6vw, 3.5rem);
+  color: #2a1f3d; line-height: 1.15;
+  text-shadow: 4px 4px 0 #ffa6c4;
+  letter-spacing: 0.02em;
+}
+.title-sub { font-size: clamp(0.7rem, 1.8vw, 1rem); color: #6b5e85; }
+.start-btn {
+  margin-top: 12px; padding: 14px 28px;
+  background: #fffdf8; border: 4px solid #2a1f3d;
+  box-shadow: 6px 6px 0 #2a1f3d;
+  color: #2a1f3d; cursor: pointer;
+  font-size: clamp(0.7rem, 2vw, 0.95rem);
+  animation: blink 1s step-end infinite;
+}
+.start-btn:hover  { background: #ffe45e; }
+.start-btn:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 #2a1f3d; }
+.title-controls { margin-top: 24px; font-size: 0.8rem; color: #2a1f3d; }
+.title-controls .key {
+  display: inline-block; padding: 3px 7px; margin: 0 2px;
+  background: #2a1f3d; color: #fffdf8; border-radius: 4px;
+  font-family: 'Press Start 2P', monospace; font-size: 9px;
+}
+
+.title-cloud {
+  position: absolute; background: #fffdf8; border-radius: 50% / 40%;
+  box-shadow:
+    -28px  4px 0 -4px #fffdf8,
+     28px  4px 0 -4px #fffdf8,
+    -50px 10px 0 -8px #fffdf8,
+     50px 10px 0 -8px #fffdf8;
+  filter: drop-shadow(0 4px 0 rgba(0,0,0,0.06));
+  pointer-events: none;
+}
+.title-cloud-1 { top: 10%; left: 8%;  width: 90px; height: 32px; }
+.title-cloud-2 { top: 18%; right: 10%; width: 60px; height: 24px; }
+.title-cloud-3 { bottom: 16%; left: 14%; width: 100px; height: 36px; }
