@@ -44,10 +44,32 @@ export const REDACT = {
 };
 
 // Placeholder image used in PUBLIC_MODE for any client screenshot path.
+// Kept for backward compat; with NDA_PROTECTED entries, we now strip images entirely.
 export const REDACTED_IMAGE_SRC = 'assets/_redacted.svg';
 
+// Project codes whose architecture diagrams + screenshots reveal client systems.
+// For these, the entire `mermaid` and `images` fields are wiped (not just text-redacted),
+// and an NDA notice section is appended so the modal still communicates the omission.
+export const NDA_PROTECTED = new Set([
+  // BrainCrew clients
+  'P-001', 'P-002', 'P-003', 'P-004',
+  // Clabi clients
+  'P-005', 'P-006', 'P-008', 'P-009',
+  // Active engagement (already textually anonymized as "Telco Enterprise")
+  'P-014',
+  // Internal tools (IT-001~004) and Aiffel/Dart-B (P-007, P-010~013) are intentionally
+  // NOT in this set — they're public/safe and show full architecture.
+]);
+
+const NDA_NOTICE_SECTION = {
+  heading: '🔒 Architecture & Screenshots',
+  body: '실제 아키텍처 다이어그램과 클라이언트 UI 스크린샷은 NDA 보호로 비공개 처리됐습니다. 면접·평가 목적의 풀버전 자료가 필요하시면 ksy974498@gmail.com 으로 연락 주세요.',
+};
+
 // Recursively redact all string values in an object/array.
-// Special-case: any field named `src` inside an `images` array becomes the placeholder.
+// - String fields: text-replace via REDACT mapping
+// - `src` fields under images[]: replaced with REDACTED_IMAGE_SRC
+// - Objects with `code` in NDA_PROTECTED: mermaid + images wiped, NDA notice appended
 export function redactObject(obj, parentKey = '') {
   if (!PUBLIC_MODE) return obj;
 
@@ -64,6 +86,13 @@ export function redactObject(obj, parentKey = '') {
     const result = {};
     for (const [k, v] of Object.entries(obj)) {
       result[k] = redactObject(v, k);
+    }
+    if (result.code && NDA_PROTECTED.has(result.code)) {
+      result.mermaid = '';
+      result.images = [];
+      if (Array.isArray(result.sections)) {
+        result.sections = [...result.sections, NDA_NOTICE_SECTION];
+      }
     }
     return result;
   }
